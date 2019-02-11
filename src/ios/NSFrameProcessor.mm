@@ -6,14 +6,14 @@
 
 -(SL::Screen_Capture::DUPL_RETURN) Init:(SL::Screen_Capture::NSFrameProcessor*) parent second:(CMTime)interval
 {
-    self = [super init];
+    //self = [super init];
     if (self) {
         self.Working = false;
         self.Paused = false;
         self.nsframeprocessor = parent;
         self.avcapturesession = [[AVCaptureSession alloc] init];
        
-        self.avinput = [[[AVCaptureScreenInput alloc] initWithDisplayID:SL::Screen_Capture::Id(parent->SelectedMonitor)] autorelease];
+        self.avinput = [[AVCaptureScreenInput alloc] initWithDisplayID:SL::Screen_Capture::Id(parent->SelectedMonitor)];
         [self.avcapturesession addInput:self.avinput];
         
         self.output = [[AVCaptureVideoDataOutput alloc] init];
@@ -55,10 +55,10 @@
     while(self.avcapturesession.isRunning || self.Working){
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
-    [self.output release];
-    [self.avinput release];
-    [self.avcapturesession release];
-    [super dealloc];
+    //[self.output release];
+    //[self.avinput release];
+    //[self.avcapturesession release];
+    //[super dealloc];
 }
 -(void) setFrameRate:(CMTime)interval{
      [self.avinput setMinFrameDuration:interval];
@@ -113,10 +113,10 @@ namespace SL{
             ~NSFrameProcessorImpl(){
                 if(ptr) {
                     [ptr Stop];
-                    [ptr release];
-                    auto r = CFGetRetainCount(ptr);
+                    //[ptr release];
+                    auto r = CFGetRetainCount((CFTypeRef)ptr);
                     while(r!=1){
-                        r = CFGetRetainCount(ptr);
+                        r = CFGetRetainCount((CFTypeRef)ptr);
                         std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     }
                     ptr = nullptr;
